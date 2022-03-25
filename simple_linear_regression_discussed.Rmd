@@ -1,0 +1,138 @@
+---
+title: "SIMPLE LINEAR REGRESSION"
+author: "Auma Diana"
+date: "`r Sys.Date()`"
+output: html_document
+---
+##importing packages
+```{r}
+library(tidyverse)
+library(caTools)
+```
+## Reading diamonds dataset in R
+```{r}
+data("diamonds")
+head(diamonds)
+
+```
+##spliting the diamond dataset
+```{r}
+sample.split(diamonds$price, SplitRatio = 0.75) ->split_tag
+head(split_tag)
+
+```
+##ASsigning train and test dataset
+```{r}
+subset(diamonds,split_tag==T) ->train
+subset(diamonds,split_tag==F) ->test
+nrow(train)
+nrow(test)
+
+```
+##fit linear model
+```{r}
+lm(price~carat, data = train) -> linear_model_1
+linear_model_1
+```
+
+```{r}
+my_results <- predict(linear_model_1, newdata = test) 
+final_data <- cbind(Actual = test$price, predicted = my_results) 
+
+```
+
+```{r}
+library(DataExplorer)
+plot_missing(train)
+```
+
+```{r}
+
+ final_data <- as.data.frame(final_data)
+view(final_data)
+
+```
+
+##errors
+```{r}
+error_final_data <- (final_data$Actual - final_data$predicted)
+
+```
+
+```{r}
+final_data <- cbind(final_data,error_final_data)
+view(final_data)
+
+```
+##Root mean squared
+```{r}
+rmse1 <- sqrt(mean((final_data$error_final_data)**2))
+rmse1
+rmse2 <- sqrt(mean((final_data$predicted)**2))
+rmse2
+
+
+```
+#Another dataset
+```{r}
+data("iris")
+head(iris)
+
+```
+
+```{r}
+sample.split(iris$Sepal.Length, SplitRatio = 0.75) ->split_iris
+head(split_iris)
+
+```
+
+```{r}
+subset(iris,split_iris==T) ->train_iris
+subset(iris,split_iris==F) ->test_iris
+nrow(train_iris)
+nrow(test_iris)
+
+```
+
+```{r}
+lm(Sepal.Length~Petal.Length, data = train_iris) -> linear_model_2
+linear_model_2
+
+```
+
+```{r}
+my_results_iris <- predict(linear_model_2, newdata = test_iris) 
+final_data_iris <- cbind(Actual = test_iris$Sepal.Length, predicted = my_results_iris)
+
+```
+
+```{r}
+final_data_iris <- as.data.frame(final_data_iris)
+view(final_data_iris)
+
+```
+
+``` {r}
+plot_missing(train_iris)
+
+```
+
+```{r}
+error_iris <- (final_data_iris$Actual - final_data_iris$predicted)
+
+```
+
+```{r}
+final_data_iris <- cbind(final_data_iris,error_iris)
+view(final_data_iris)
+```
+
+```{r}
+rmse1_iris <- sqrt(mean((final_data_iris$error_iris)**2))
+rmse1_iris
+rmse2_iris <- sqrt(mean((final_data_iris$predicted)**2))
+rmse2_iris
+
+```
+
+
